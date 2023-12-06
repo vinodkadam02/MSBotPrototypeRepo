@@ -64,7 +64,7 @@ jobs:
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          publish-profile: 'XWr8Q~KZwxApiT~jCVu4HZLoOI5~qQiG_Hkfkch6'
+          publish-profile: 'in78Q~wFii6Wt4dbm-WpASSIy7v.92vD.~36JbOA'
           package: '*.war'
 
   deploy:
@@ -87,5 +87,5 @@ jobs:
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          publish-profile: 'XWr8Q~KZwxApiT~jCVu4HZLoOI5~qQiG_Hkfkch6'
+          publish-profile: 'in78Q~wFii6Wt4dbm-WpASSIy7v.92vD.~36JbOA'
           package: '*.war'
