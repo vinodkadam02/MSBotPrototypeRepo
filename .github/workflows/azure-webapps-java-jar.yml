@@ -34,7 +34,7 @@ jobs:
       - name: Azure login
         uses: azure/login@v1
         with:
-          creds: '{"clientId":"a472847e-2188-45df-a579-5f01e64e49dd","clientSecret":"55c4cbf8-3b2b-4c5d-85f5-c6dc63564bc8","subscriptionId":"76b05d92-0cbe-46b3-ac56-9bc9c8e85e80","tenantId":"4e260fd7-c2ff-4269-a326-31f8cc2b9673"}'
+          creds: '{"clientId":"a472847e-2188-45df-a579-5f01e64e49dd","clientSecret":"in78Q~wFii6Wt4dbm-WpASSIy7v.92vD.~36JbOA","subscriptionId":"76b05d92-0cbe-46b3-ac56-9bc9c8e85e80","tenantId":"4e260fd7-c2ff-4269-a326-31f8cc2b9673"}'
           enable-AzPSSession: true
 
       - uses: actions/checkout@v3
@@ -62,5 +62,5 @@ jobs:
         uses: azure/webapps-deploy@v2
         with:
           app-name: 'MSBotPrototypeWebApp'
-          publish-profile: '55c4cbf8-3b2b-4c5d-85f5-c6dc63564bc8'
+          publish-profile: 'in78Q~wFii6Wt4dbm-WpASSIy7v.92vD.~36JbOA'
           package: '*.war'
