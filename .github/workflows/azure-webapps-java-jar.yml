@@ -21,7 +21,7 @@ name: Build and deploy War app to Azure Web App
 
 env:
   AZURE_WEBAPP_NAME: MSBotPrototypeWebApp     # set this to the name of your Azure Web App
-
+  AZURE_CREDENTIALS : {"clientId":"a472847e-2188-45df-a579-5f01e64e49dd","clientSecret":"q8V8Q~Mtys.l4zH0W-z9dDRtPJs5tW3LG7sD3aP.","subscriptionId":"76b05d92-0cbe-46b3-ac56-9bc9c8e85e80","tenantId":"4e260fd7-c2ff-4269-a326-31f8cc2b9673"}
 on:
   push:
     branches: [ "main" ]
@@ -34,7 +34,7 @@ jobs:
       - name: Azure login
         uses: azure/login@v1
         with:
-          creds: {"clientId":"a472847e-2188-45df-a579-5f01e64e49dd","clientSecret":"q8V8Q~Mtys.l4zH0W-z9dDRtPJs5tW3LG7sD3aP.","subscriptionId":"76b05d92-0cbe-46b3-ac56-9bc9c8e85e80","tenantId":"4e260fd7-c2ff-4269-a326-31f8cc2b9673"}
+          creds: ${{ env.AZURE_CREDENTIALS }}
           enable-AzPSSession: true
 
       - uses: actions/checkout@v3
