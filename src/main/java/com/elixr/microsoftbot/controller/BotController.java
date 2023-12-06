@@ -27,7 +27,7 @@ public class BotController extends TeamsActivityHandler {
     public ResponseEntity<BotMessageResponse> handleBotMessages(@RequestBody Activity activity) {
         TurnContext turnContext = new TurnContextImpl(botFrameworkHttpAdapter, activity);
         onMessageActivity(turnContext); // Process incoming message asynchronously
-        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 //    @PostMapping("/api/messages")
 //    public ResponseEntity<BotMessageResponse> handleBotMessages(@RequestBody Activity activity) {
