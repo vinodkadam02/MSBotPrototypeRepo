@@ -12,6 +12,11 @@ on:
 jobs:
   build-and-deploy:
     runs-on: windows-latest
+
+    environment:
+      name: 'production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+      
     steps:
       - uses: actions/checkout@v3
 
@@ -41,6 +46,7 @@ jobs:
           path: '${{ github.workspace }}/build/libs/*.war'
 
       - name: Deploy to Azure Web App
+        id : deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
