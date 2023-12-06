@@ -1,27 +1,9 @@
-# This workflow will build and push a Java application to an Azure Web App when a commit is pushed to your default branch.
-#
-# This workflow assumes you have already created the target Azure App Service web app.
-# For instructions see https://docs.microsoft.com/en-us/azure/app-service/quickstart-java?tabs=javase&pivots=platform-linux
-#
-# To configure this workflow:
-#
-# 1. Download the Publish Profile for your Azure Web App. You can download this file from the Overview page of your Web App in the Azure Portal.
-#    For more information: https://docs.microsoft.com/en-us/azure/app-service/deploy-github-actions?tabs=applevel#generate-deployment-credentials
-#
-# 2. Create a secret in your repository named AZURE_WEBAPP_PUBLISH_PROFILE, paste the publish profile contents as the value of the secret.
-#    For instructions on obtaining the publish profile see: https://docs.microsoft.com/azure/app-service/deploy-github-actions#configure-the-github-secret
-#
-# 3. Change the value for the AZURE_WEBAPP_NAME. Optionally, change the JAVA_VERSION environment variable below.
-#
-# For more information on GitHub Actions for Azure: https://github.com/Azure/Actions
-# For more information on the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# For more samples to get started with GitHub Action workflows to deploy to Azure: https://github.com/Azure/actions-workflow-samples
-
 name: Build and deploy War app to Azure Web App
 
 env:
-  AZURE_WEBAPP_NAME: MSBotPrototypeWebApp     # set this to the name of your Azure Web App
-  AZURE_CREDENTIALS: { "clientId": 'a472847e-2188-45df-a579-5f01e64e49dd',"clientSecret": 'q8V8Q~Mtys.l4zH0W-z9dDRtPJs5tW3LG7sD3aP.',"subscriptionId": '76b05d92-0cbe-46b3-ac56-9bc9c8e85e80',"tenantId": '4e260fd7-c2ff-4269-a326-31f8cc2b9673' }
+  AZURE_WEBAPP_NAME: "MsBotJava"    # set this in to the name of your Azure Web App
+  AZURE_WEBAPP_PUBLISH_PROFILE: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+
 on:
   push:
     branches: [ "main" ]
@@ -30,13 +12,12 @@ on:
 jobs:
   build-and-deploy:
     runs-on: windows-latest
-    steps:
-      - name: Azure login
-        uses: azure/login@v1
-        with:
-          creds: ${{ env.AZURE_CREDENTIALS }}
-          enable-AzPSSession: true
 
+    environment:
+      name: 'production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+    steps:
       - uses: actions/checkout@v3
 
       - name: Set up JDK and Gradle
@@ -52,15 +33,23 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build
 
+      # - name: Azure login
+      #   uses: azure/login@v1
+      #   with:
+      #     creds: ${{ secrets.AZURE_CREDENTIALS }}
+      #     enable-AzPSSession: true
+
       - name: Upload artifact for deployment
         uses: actions/upload-artifact@v3
         with:
           name: java-app
-          path: '${{ github.workspace }}/target/*.war'
+          path: '${{ github.workspace }}/build/libs/*.war'
 
       - name: Deploy to Azure Web App
+        id : deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'MSBotPrototypeWebApp'
-          publish-profile: 'in78Q~wFii6Wt4dbm-WpASSIy7v.92vD.~36JbOA'
-          package: '*.war'
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          # slot-name: 'production'
+          publish-profile: ${{ env.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: '${{ github.workspace }}/build/libs/*.war'
