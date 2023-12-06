@@ -17,12 +17,10 @@
 # For more information on the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # For more samples to get started with GitHub Action workflows to deploy to Azure: https://github.com/Azure/actions-workflow-samples
 
-name: Build and deploy JAR app to Azure Web App
+name: Build and deploy War app to Azure Web App
 
 env:
-  AZURE_WEBAPP_NAME: MSBotPrototype     # set this to the name of your Azure Web App
-  JAVA_VERSION: '11'                  # set this to the Java version to use
-  DISTRIBUTION: zulu                  # set this to the Java distribution
+  AZURE_WEBAPP_NAME: MSBotPrototypeWebApp     # set this to the name of your Azure Web App
 
 on:
   push:
@@ -54,7 +52,20 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: java-app
-          path: '${{ github.workspace }}/target/*.jar'
+          path: '${{ github.workspace }}/target/*.war'
+
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v3
+        with:
+          name: java-app
+
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: '*.war'
 
   deploy:
     permissions:
@@ -76,5 +87,5 @@ jobs:
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: '*.jar'
+          publish-profile: 'XWr8Q~KZwxApiT~jCVu4HZLoOI5~qQiG_Hkfkch6'
+          package: '*.war'
