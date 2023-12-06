@@ -27,21 +27,16 @@ on:
     branches: [ "main" ]
   workflow_dispatch:
 
-
 jobs:
   build-and-deploy:
     runs-on: windows-latest
     steps:
-#      - name: Azure login
-#        uses: azure/login@v1
-#        with:
-#          creds: '{"clientId":"a472847e-2188-45df-a579-5f01e64e49dd","clientSecret":"55c4cbf8-3b2b-4c5d-85f5-c6dc63564bc8","subscriptionId":"76b05d92-0cbe-46b3-ac56-9bc9c8e85e80","tenantId":"4e260fd7-c2ff-4269-a326-31f8cc2b9673"}'
-##          auth-type: IDENTITY
-##          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-##          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-#          enable-AzPSSession: true
+      - name: Azure login
+        uses: azure/login@v1
+        with:
+          creds: '{"clientId":"a472847e-2188-45df-a579-5f01e64e49dd","clientSecret":"55c4cbf8-3b2b-4c5d-85f5-c6dc63564bc8","subscriptionId":"76b05d92-0cbe-46b3-ac56-9bc9c8e85e80","tenantId":"4e260fd7-c2ff-4269-a326-31f8cc2b9673"}'
+          enable-AzPSSession: true
 
-#    steps:
       - uses: actions/checkout@v3
 
       - name: Set up JDK and Gradle
@@ -57,45 +52,15 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build
 
-      - name: Upload artifact for deployment job
+      - name: Upload artifact for deployment
         uses: actions/upload-artifact@v3
         with:
           name: java-app
           path: '${{ github.workspace }}/target/*.war'
 
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v3
-        with:
-          name: java-app
-
       - name: Deploy to Azure Web App
-        id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
           app-name: 'MSBotPrototypeWebApp'
-          publish-profile: '55c4cbf8-3b2b-4c5d-85f5-c6dc63564bc8'
-          package: '*.war'
-
-  deploy:
-    permissions:
-      contents: none
-    runs-on: windows-latest
-    needs: build
-    environment:
-      name: 'Production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-
-    steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v3
-        with:
-          name: java-app
-
-      - name: Deploy to Azure Web App
-        id: deploy-to-webapp
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: 'MSBotPrototypeWebApp'
-          slot-name: 'Production'
           publish-profile: '55c4cbf8-3b2b-4c5d-85f5-c6dc63564bc8'
           package: '*.war'
