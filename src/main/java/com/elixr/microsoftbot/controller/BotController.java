@@ -58,10 +58,13 @@ public class BotController extends TeamsActivityHandler {
         String userInput = turnContext.getActivity().getText().toLowerCase();
         if (userInput.equals("hello")) {
             turnContext.sendActivity(MessageFactory.text("Hi there!"));
+            System.out.println("Hi there!");
         } else if (userInput.equals("help")) {
             turnContext.sendActivity(MessageFactory.text("I'm here to help. What do you need?"));
+            System.out.println("I'm here to help. What do you need?");
         } else {
             turnContext.sendActivity(MessageFactory.text("Sorry, I didn't get that."));
+            System.out.println("Sorry, I didn't get that.");
         }
         return CompletableFuture.completedFuture(null);
     }
